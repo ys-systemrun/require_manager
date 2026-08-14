@@ -1,5 +1,6 @@
 node_modules
 dist
 .vite
+storybook-static
 npm-debug.log*
 .env

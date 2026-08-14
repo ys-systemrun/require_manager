@@ -1,0 +1,18 @@
+# Storybook 単体でフロントエンドのコンポーネントを確認するための構成。
+#
+#   docker compose -f docker-compose.storybook.yml up --build
+#
+# 起動後 http://localhost:6006 で Storybook にアクセスできます。
+# バックエンドや DB には依存しません（コンポーネントを独立して表示）。
+services:
+  storybook:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.storybook
+    container_name: reqmgr-storybook
+    restart: unless-stopped
+    ports:
+      - "${STORYBOOK_PORT:-6006}:6006"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules

@@ -46,6 +46,33 @@ docker compose down          # 停止
 docker compose down -v       # DB のデータも削除
 ```
 
+## Storybook（コンポーネント確認）
+
+フロントエンドの UI コンポーネントを単体で確認できる Storybook を用意しています。
+バックエンドや DB には依存しません。
+
+```bash
+docker compose -f docker-compose.storybook.yml up --build
+```
+
+起動後 http://localhost:6006 でアクセスします。
+
+登録済みのストーリー:
+
+- **Components/Badge** — ステータスバッジ（全バリアント）
+- **Components/Modal** — モーダル（表示例・開閉のインタラクティブ例）
+- **Design System/Overview** — バッジ／ボタン／チップ、統計カード、
+  UML クラスカード、用語カードの視覚カタログ
+
+コンテナを使わずローカルで起動する場合:
+
+```bash
+cd frontend
+npm install
+npm run storybook        # 開発サーバ（http://localhost:6006）
+npm run build-storybook  # 静的ビルド（storybook-static/）
+```
+
 ## ディレクトリ構成
 
 ```
