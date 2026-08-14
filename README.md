@@ -87,8 +87,8 @@ require_manager/
 │   └── internal/
 │       ├── config/           # 環境変数の読み込み
 │       ├── database/         # 接続・マイグレーション
-│       ├── models/           # ドメインモデル（GORM）
-│       ├── handlers/         # HTTP ハンドラ
+│       ├── models/           # ドメインモデル（struct ごとに1ファイル）
+│       ├── handlers/         # HTTP ハンドラ + テスト（*_test.go）
 │       ├── router/           # ルーティング + CORS
 │       └── seed/             # サンプルデータ投入
 └── frontend/                 # React + TypeScript + Vite
@@ -128,6 +128,17 @@ cd backend
 DB_HOST=localhost DB_PORT=5432 DB_USER=reqmgr DB_PASSWORD=reqmgr_pass \
   DB_NAME=reqmgr go run ./main.go
 ```
+
+**バックエンドのテスト**（外部 DB 不要 — 各テストが一時的な SQLite を使用）:
+
+```bash
+cd backend
+go test ./...              # 全テスト
+go test ./... -cover -v    # カバレッジ付き
+```
+
+ハンドラのテストは実際のルーター経由で HTTP リクエストを送り、
+CRUD・フィルタ・キーワード検索・階層・カスケード削除などを検証します。
 
 **フロントエンド**:
 

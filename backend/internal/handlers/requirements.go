@@ -21,8 +21,7 @@ func (h *Handler) ListRequirements(c *gin.Context) {
 		q = q.Where("type = ?", typ)
 	}
 	if kw := c.Query("keyword"); kw != "" {
-		like := "%" + kw + "%"
-		q = q.Where("title ILIKE ? OR description ILIKE ? OR code ILIKE ?", like, like, like)
+		q = keywordSearch(q, kw, "title", "description", "code")
 	}
 	var reqs []models.Requirement
 	if err := q.Find(&reqs).Error; err != nil {

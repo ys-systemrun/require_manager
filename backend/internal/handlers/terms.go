@@ -15,11 +15,7 @@ func (h *Handler) ListTerms(c *gin.Context) {
 		q = q.Where("project_id = ?", pid)
 	}
 	if kw := c.Query("keyword"); kw != "" {
-		like := "%" + kw + "%"
-		q = q.Where(
-			"name ILIKE ? OR reading ILIKE ? OR english_name ILIKE ? OR definition ILIKE ? OR aliases ILIKE ?",
-			like, like, like, like, like,
-		)
+		q = keywordSearch(q, kw, "name", "reading", "english_name", "definition", "aliases")
 	}
 	var terms []models.Term
 	if err := q.Find(&terms).Error; err != nil {

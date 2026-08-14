@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -39,6 +40,23 @@ func projectFilter(c *gin.Context) (uint, bool) {
 		return 0, false
 	}
 	return uint(id), true
+}
+
+// keywordSearch adds a portable, case-insensitive substring match across the
+// given columns. Using LOWER(col) LIKE LOWER(?) keeps the query working on both
+// PostgreSQL (production) and SQLite (tests) without dialect-specific ILIKE.
+func keywordSearch(db *gorm.DB, keyword string, columns ...string) *gorm.DB {
+	if keyword == "" || len(columns) == 0 {
+		return db
+	}
+	like := "%" + strings.ToLower(keyword) + "%"
+	clauses := make([]string, len(columns))
+	args := make([]interface{}, len(columns))
+	for i, col := range columns {
+		clauses[i] = "LOWER(" + col + ") LIKE ?"
+		args[i] = like
+	}
+	return db.Where(strings.Join(clauses, " OR "), args...)
 }
 
 func badRequest(c *gin.Context, err error) {
